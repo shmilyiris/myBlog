@@ -10,8 +10,14 @@
             <ul class="navbar-nav">
                 <!--条目-->
                 <li class="nav-item">
-                    <a class="nav-link" href="#">文章</a>
+                    <!--app_name: url_address-->
+                    <a class="nav-link" href="{% url 'article:article_list' %}">文章</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'article:article_create' %}">新建文章</a>
+                </li>
+
             </ul>
         </div>
     </div>
