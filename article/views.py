@@ -42,7 +42,16 @@ def article_create(request):
             return HttpResponse("表单内容有误，请重新填写。")
     else:
         article_post_form = ArticlePostForm()
-        # 赋值上下文
         context = { 'article_post_form': article_post_form }
         return render(request, 'article/create.html', context)
+
+# 安全删除文章的视图
+def article_safe_delete(request, id):
+    if request.method == 'POST':
+        article = ArticlePost.objects.get(id=id)
+        article.delete()
+        return redirect("article:article_list")
+    else:
+        return HttpResponse("仅允许Post请求");
+
 
