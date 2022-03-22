@@ -35,7 +35,7 @@ def article_create(request):
         article_post_form = ArticlePostForm(data=request.POST)
         if article_post_form.is_valid():
             new_article = article_post_form.save(commit=False)
-            new_article.author = User.objects.get(id=1)
+            new_article.author = User.objects.get(id=request.user.id) # 指定文章作者为当前登录用户
             new_article.save()
             return redirect("article:article_list")
         else:
@@ -49,6 +49,8 @@ def article_create(request):
 def article_safe_delete(request, id):
     if request.method == 'POST':
         article = ArticlePost.objects.get(id=id)
+        if article.author != request.user.username:
+            return HttpResponse("你不是本人，无权删除文章！")
         article.delete()
         return redirect("article:article_list")
     else:
@@ -57,6 +59,8 @@ def article_safe_delete(request, id):
 # 修改文章的视图
 def article_update(request, id):
     article = ArticlePost.objects.get(id=id)
+    if article.author != request.user.username:
+        return HttpResponse("你不是本人，无权更改文章！")
     if request.method == "POST":
         article_post_form = ArticlePostForm(data=request.POST)
 
