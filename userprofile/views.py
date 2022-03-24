@@ -16,7 +16,7 @@ def user_login(request):
             data = user_login_form.cleaned_data # 清洗出合法数据
             user = authenticate(username=data['username'], password=data['password'])
             if user:
-                login(request, user)
+                login(request, user) # login并将用户信息保存到session中
                 return redirect("article:article_list")
             else:
                 return HttpResponse("账号或密码有误，请重新输入")
@@ -44,7 +44,7 @@ def user_register(request):
             login(request, new_user)
             return redirect("article:article_list")
         else:
-            return HttpResponse("注册表单输入有误，请重新输入")
+            return HttpResponse("注册表单输入有误(名字重复或密码输入不正确)，请重新输入")
     
     elif request.method == 'GET':
         user_register_form = UserRegisterForm()

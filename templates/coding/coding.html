@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} 在线代码 {% endblock title %}
+{% block content %}
+<!-- 编写代码界面 -->
+<div class="container">
+    <!-- 代码写入界面 -->
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <div class="panel panel-default" style="margin-bottom: 0px; border-radius:0px; border-bottom-width:0px; ">
+                <div class="panel-heading" style="height:55px; border-bottom-width:0px; ">
+                    <div class="row justify-content-end">
+
+                        <div class="btn-group col-md-6">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="select-lang">title</label>
+                            </div>
+                            <div>
+                                <input type="text" id="input-title" class="form-control" style="position:relative;width:350px;">
+                            </div>
+                        </div>
+
+                        <div class="btn-group col-md-2">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="select-font-size">size</label>
+                            </div>
+                            <select class="custom-select" id="select-font-size">
+                                <option value="1" selected>small</option>
+                                <option value="2">mid</option>
+                                <option value="3">large</option>
+                            </select>
+                        </div>
+
+                        <div class="btn-group col-md-2">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="select-lang">lang</label>
+                            </div>
+                            <select class="custom-select" id="select-lang">
+                                <option value="1" selected>cpp</option>
+                                <option value="2">python3</option>
+                                <option value="3">html</option>
+                                <option value="4">css</option>
+                                <option value="5">javascript</option>
+                            </select>
+                        </div>
+
+                         <div class="btn-group col-md-2">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="select-theme">theme</label>
+                            </div>
+                            <select class="custom-select" id="select-theme">
+                                <option value="1" selected>github</option>
+                                <option value="2">monokai</option>
+                                <option value="3">twilight</option>
+                                <option value="4">textmate</option>
+                                <option value="5">eclipse</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <pre id="editor" style="position:relative;height:400px;top:1px;left:0px;right:0px;"></pre>
+        </div>
+    </div>
+
+    <!-- stdin写入界面 -->
+    <div class="row">
+    </div>
+
+    <!-- 运行按钮，复制按钮，生成代码板(周期为1天) -->
+    <div class="row">
+        <div class="col-12">
+            <button id="button-run" type="button" class="btn btn-primary btn-sm" disabled>Run</button>
+            <button id="generator" type="button" class="btn btn-danger btn-sm">Generate</button>
+        </div>
+    </div>
+
+    <!-- stdout显示界面 -->
+    <div class="row">
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        var editor = ace.edit("editor");
+        var curlang = "c_cpp";
+        editor.setTheme("ace/theme/github");
+        editor.session.setMode("ace/mode/c_cpp");
+        langs = [, "c_cpp", "python", "html", "css", "javascript"];
+        themes = [, "github", "monokai", "twilight", "textmate", "eclipse"];
+        sizes = [, '12px', '15px', '18px'];
+
+        $("#select-lang").change(function() {
+            var selected = $(this).children('option:selected').val();
+            curlang = langs[selected];
+            editor.session.setMode("ace/mode/"+langs[selected]);
+        });
+
+        $("#select-theme").change(function() {
+            var selected = $(this).children('option:selected').val();
+            editor.setTheme("ace/theme/"+themes[selected]);
+        });
+
+        $("#select-font-size").change(function() {
+            var selected = $(this).children('option:selected').val();
+            document.getElementById('editor').style.fontSize=sizes[selected];
+        })
+        //$(document).ready(function() {
+            let origin = "http://101.35.183.71:10000/";
+            $("#generator").click(function() {
+                var redirect_url;
+                $.ajax({
+                    url: origin + "coding/generate/",
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': "{{ csrf_token }}",
+                    },
+                    data: {
+                        title: $("#input-title").val(),
+                        lang: curlang,
+                        code: editor.getValue(),
+                    },
+                    success: function(resp) {
+                        if (resp.result == "success") {
+                            redirect_url = origin + "coding/show/" + resp.num + "/";
+                            window.location.href=redirect_url;
+                        }
+                    }
+                });
+            })
+        //});
+    </script>
+
+</div>
+{% endblock content %}

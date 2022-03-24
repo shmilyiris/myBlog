@@ -21,6 +21,15 @@ class UserRegisterForm(forms.ModelForm):
         else:
             raise forms.ValidationError("密码输入不一致，请重试")
 
+    def clean_username_isused(self):
+        data = self.cleaned_data
+        username = data.get('username')
+        for user in User.objects.all():
+            if user.username == username:
+                return forms.ValidationError("系统中存在重复用户名，请改个名字")
+            else:
+                return username
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile

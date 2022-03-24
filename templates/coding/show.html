@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} 代码展示 {% endblock title %}
+{% block content %}
+<div class="container">
+    <br>
+    <blockquote class="blockquote text-center">
+        <p class="mb-0">{{ headline }}</p>
+        <footer class="blockquote-footer"><cite title="Source Title">{{ author }}</cite></footer>
+    </blockquote>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="editor" style="position:relative;height:500px;">{{ code }}</div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/"+"{{ lang }}");
+        editor.setReadOnly(true);
+    </script>
+{% endblock content %}

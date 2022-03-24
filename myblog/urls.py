@@ -21,5 +21,6 @@ urlpatterns = [
 
     path('article/', include('article.urls', namespace='article')),
     path('userprofile/', include('userprofile.urls', namespace='userprofile')),
+    path('coding/', include('coding.urls', namespace='coding')),
     path('password-reset/', include('password_reset.urls')),
 ]

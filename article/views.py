@@ -49,18 +49,19 @@ def article_create(request):
 def article_safe_delete(request, id):
     if request.method == 'POST':
         article = ArticlePost.objects.get(id=id)
-        if article.author != request.user.username:
+        if str(article.author) != request.user.username:
             return HttpResponse("你不是本人，无权删除文章！")
         article.delete()
         return redirect("article:article_list")
     else:
-        return HttpResponse("仅允许Post请求");
+        return HttpResponse("仅允许Post请求")
 
 # 修改文章的视图
 def article_update(request, id):
     article = ArticlePost.objects.get(id=id)
-    if article.author != request.user.username:
+    if str(article.author) != request.user.username:
         return HttpResponse("你不是本人，无权更改文章！")
+
     if request.method == "POST":
         article_post_form = ArticlePostForm(data=request.POST)
 
