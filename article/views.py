@@ -3,13 +3,19 @@ from django.http import HttpResponse
 from .models import ArticlePost
 from .forms import ArticlePostForm
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 import markdown
 
 # Create your views here.
 
 def article_list(request):
     # 取出所有博客文章
-    articles = ArticlePost.objects.all()
+    article_list = ArticlePost.objects.all()
+    # 每页显示3篇文章
+    paginator = Paginator(article_list, 3)
+    # 获取url中的页码，并获取对应文章
+    page = request.GET.get('page')
+    articles = paginator.get_page(page)
     # 需要传给模板的对象
     context = {'articles':articles}
     return render(request, 'article/list.html', context)

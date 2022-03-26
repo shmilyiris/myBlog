@@ -3,23 +3,22 @@
 
     <div class="container">
         <!--导航栏商标-->
-        <a class="navbar-brand" href="#">今天你coding了吗?</a>
+        <a class="navbar-brand" href="{% url 'article:article_list' %}">今天你coding了吗?</a>
 
         <!--导航栏入口-->
         <div>
             <ul class="navbar-nav">
                 <!--条目-->
-                <li clas="nav-item">
-                    <a class="nav-link" href="{% url 'coding:edit' %}">在线代码</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'chat:chatfield' %}">聊天室</a>
                 </li>
 
                 <li class="nav-item">
-                    <!--app_name: url_address-->
-                    <a class="nav-link" href="{% url 'article:article_list' %}">文章列表</a>
+                    <a class="nav-link" href="{% url 'coding:edit' %}">写代码</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'article:article_create' %}">新建文章</a>
+                    <a class="nav-link" href="{% url 'article:article_create' %}">写文章</a>
                 </li>
 
 

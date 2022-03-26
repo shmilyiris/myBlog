@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'article',
     'userprofile',
     'password_reset',
+    'coding',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +128,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+USERPROFILE_ROOT = os.path.join(BASE_DIR, "userprofile")
 
 # add SMTP settings
 EMAIL_HOST = 'smtp.gmail.com'
@@ -134,3 +137,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'gzg的博客 <zhigaogeng.johnson@gmail.com>'
+
+# media file address
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

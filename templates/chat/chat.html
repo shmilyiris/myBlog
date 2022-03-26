@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} 聊天室 {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <br>
+            <div class="panel panel-default">
+                <div class="chat-sidebox-heading pannel-heading">
+                    <div class="chat-sidebox-heading-img" style="position:relative; width:35%; height:100px; display:inline-block">
+                        <img src="http://101.35.183.71:10000/media/avatar/20220325/cc.jpg" class="rounded-circle" style="max-height:100%; max-width:100%;">
+                    </div>
+
+                    <div class="chat-sidebox-heading-space" style="position:relative; width:5%; height:100%; display:inline-block">
+                    </div>
+
+                    <div class="chat-sidebox-heading-username" style="position:relative; width:45%; height:100px; display:inline-block">
+                        Johnson
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style='background-color=grey;'>
+            聊天框
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <br>
+                <p class="text-center">公共聊天区</p>
+
+                <textarea class="form-control form-control-lg" style="position:relative; height:460px" readonly></textarea>
+                <br>
+                <input type="text" placeholder="说点儿什么吧" style="position:relative; width:85%;">
+                <button type="submit">发送</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
