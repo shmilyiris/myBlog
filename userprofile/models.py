@@ -10,6 +10,8 @@ from django.dispatch import receiver
 class Profile(models.Model):
     # 与User模型构成一对一的关系
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    # 邮箱
+    contact_email = models.CharField(max_length=30, blank=True)
     # 电话号码字段
     phone = models.CharField(max_length=20, blank=True)
     # 头像

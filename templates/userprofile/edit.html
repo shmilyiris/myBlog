@@ -10,7 +10,7 @@
     <div class="row shadow-lg">
 
         {% csrf_token %}
-        <div class="col-md-6">
+        <div class="col-md-6 border-right">
             <br>
             <div class="text-center" style="font-weight:bold">
                 用户名：{{ user.username }}
@@ -38,6 +38,12 @@
 
         <div class="col-md-6">
             <br>
+                <!-- email -->
+                <div class="form-group form-inline col-md-12">
+                    <label for="contact_email" style="font-weight:bold">邮箱：</label>
+                    <input type="email" class="form-control" id="contact_email" name="contact_email" value="{{ profile.contact_email }}" style="width:80%;">
+                </div>
+                <br>
                 <!-- phone -->
                 <div class="form-group form-inline col-md-12">
                     <label for="phone" style="font-weight:bold">电话：</label>
@@ -48,8 +54,7 @@
                 <!-- bio -->
                 <div class="form-group form-inline col-md-12">
                     <label for="bio" style="font-weight:bold">简介：</label>
-                    <textarea type="text" class="form-control" id="bio" name="bio" rows="10" style="width:80%">
-                        {{ profile.bio }}
+                    <textarea type="text" class="form-control" id="bio" name="bio" rows="10" style="width:80%; text-align:left;">{{ profile.bio }}
                     </textarea>
                 </div>
                 <br>

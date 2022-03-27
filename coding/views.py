@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.core.cache import cache
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+@login_required(login_url='/userprofile/login/')
 def coding(request):
     '''
     supers = User.objects.filter(is_superuser=True)

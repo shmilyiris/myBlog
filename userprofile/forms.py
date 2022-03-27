@@ -33,7 +33,7 @@ class UserRegisterForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('phone', 'avatar', 'bio')
+        fields = ('contact_email', 'phone', 'avatar', 'bio')
 
 
 

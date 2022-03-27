@@ -86,6 +86,7 @@ def profile_edit(request, id):
         if profile_form.is_valid():
             # 取得清洗后的合法数据
             profile_cd = profile_form.cleaned_data
+            profile.contact_email = profile_cd['contact_email']
             profile.phone = profile_cd['phone']
             profile.bio = profile_cd['bio']
             if 'avatar' in request.FILES:

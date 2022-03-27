@@ -4,6 +4,7 @@ from .models import ArticlePost
 from .forms import ArticlePostForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 import markdown
 
 # Create your views here.
@@ -35,6 +36,7 @@ def article_detail(request, id):
     return render(request, 'article/detail.html', context)
 
 # 写入文章的视图
+@login_required(login_url='/userprofile/login/')
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":

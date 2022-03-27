@@ -5,4 +5,5 @@ app_name = 'chat'
 
 urlpatterns = [
     path('chatfield/', views.chat, name='chatfield'),
+    path('send/pub/', views.send_pub, name='send_pub'),
 ]

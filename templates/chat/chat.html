@@ -4,37 +4,114 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
+        <!-- 私聊区 -->
+        <div class="col-md-8">
             <br>
-            <div class="panel panel-default">
-                <div class="chat-sidebox-heading pannel-heading">
-                    <div class="chat-sidebox-heading-img" style="position:relative; width:35%; height:100px; display:inline-block">
-                        <img src="http://101.35.183.71:10000/media/avatar/20220325/cc.jpg" class="rounded-circle" style="max-height:100%; max-width:100%;">
+            <!--私聊区heading -->
+            <div class="row no-gutters border" style="border-radius:2px;">
+
+                <!-- 私聊区heading-个人信息 -->
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="chat-sidebox-heading panel-heading border" style="background-color:rgba(232,232,232, 0.4); height:8vh; padding:2px;">
+                            <div class="chat-sidebox-heading-img" style="position:relative; width:25%; display:inline-block; margin:5px;">
+                                <a href="{% url 'userprofile:edit' user.id%}">
+                                    <img src="{{ profile.avatar.url }}" class="rounded-circle" style="max-height:70%; max-width:70%;">
+                                </a>
+                            </div>
+
+
+                            <div class="chat-sidebox-heading-username" style="position:relative; width:45%; height:100%; display:inline-block; font-weight:bold">
+                                &nbsp; &nbsp; {{ user.username }}
+                            </div>
+
+                        </div>
+
+                        <div class="panel-content">
+                        </div>
                     </div>
 
-                    <div class="chat-sidebox-heading-space" style="position:relative; width:5%; height:100%; display:inline-block">
-                    </div>
+                </div>
 
-                    <div class="chat-sidebox-heading-username" style="position:relative; width:45%; height:100px; display:inline-block">
-                        Johnson
+                <!-- 私聊区heading-好友信息 -->
+                <div class="col-md-8">
+                    <div class="panel panel-default">
+                        <div class="chat-fieldbox-heading panel-heading" style="background-color:rgba(245,245,245, 0.6); height:8vh">
+                        </div>
+
+                        <div class="panel-content">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row no-gutters" style="">
+                <div class="col-md-4">
+                    <div class="chat-sidebox-body" style="height:70vh; background-color:rgba(232,232,232, 0.7);">
+                    </div>
+                </div>
+
+                <div class="col-md-8 border">
+                    <div class="row">
+                        <div class="chat-fieldbox-body-show" style="height:45vh;">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="chat-fieldbox-body-input" style="height:20vh">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6" style='background-color=grey;'>
-            聊天框
-        </div>
+
+        <!-- 公共聊天区 -->
         <div class="col-md-4">
             <div class="form-group">
                 <br>
-                <p class="text-center">公共聊天区</p>
+                <p class="text-center" style="font-weight:bold">公共聊天区</p>
 
-                <textarea class="form-control form-control-lg" style="position:relative; height:460px" readonly></textarea>
+                <textarea id="pubwindow" class="form-control form-control-lg" style="position:relative; height:460px; font-size:15px; text-align:left; resize:none" readonly>{% for history in histories%}{{ history }}&#10;{% endfor %}</textarea>
                 <br>
-                <input type="text" placeholder="说点儿什么吧" style="position:relative; width:85%;">
-                <button type="submit">发送</button>
+
+                <div class="input-group mb-3">
+                    <input id="pubform-input" class="form-control" type="text" name="content" id="content" placeholder="说点儿什么吧.." style="position:relative; width:80%;">
+                    <div class="input-group-append">
+                        <button id="pubform-submit" class="btn btn-outline-secondary" type="submit">发送</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        text_move_to_end();
+    });
+    $("#pubform-submit").click(function() {
+        $.ajax({
+            url: "http://101.35.183.71:10000/chat/send/pub/",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            data: {
+                'content': $('#pubform-input').val(),
+            },
+            success: function(resp) {
+                let diff = resp.content + "&#10;";
+                $('#pubwindow').append(diff);
+                text_move_to_end();
+            }
+        });
+    })
+
+    function text_move_to_end() {
+        var obj = $("#pubwindow");
+        if (obj.length)
+            obj.scrollTop(obj[0].scrollHeight - obj.height());
+    }
+</script>
 {% endblock content %}
