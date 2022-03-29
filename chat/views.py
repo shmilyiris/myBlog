@@ -15,6 +15,7 @@ def chat(request):
     if str(request.user.username):
         if request.method == 'GET':
             user = User.objects.get(username=str(request.user.username))
+            users = User.objects.all()
             profile = Profile.objects.get(user_id=request.user.id)
             profile_form = ProfileForm()
             # 获取publish的history
@@ -22,6 +23,7 @@ def chat(request):
             for item in PublicMessage.objects.all():
                 histories.append(item.content)
             context = {
+                'users': users,
                 'histories': histories,
                 'profile_form': profile_form,
                 'profile': profile,
@@ -49,5 +51,16 @@ def send_pub(request):
         })
     else:
         return HttpResponse("请用POST方法请求数据")
+
+def getsrc(request):
+    if request.method == "GET":
+        id = request.GET.get("id")
+        profile = Profile.objects.get(user_id=id)
+        print(profile.avatar.url)
+        url = profile.avatar.url
+        return JsonResponse({
+            'url': url,
+        })
+
 
 

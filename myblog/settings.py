@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ["101.35.183.71"]
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,3 +142,13 @@ DEFAULT_FROM_EMAIL = 'gzg的博客 <zhigaogeng.johnson@gmail.com>'
 # media file address
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+ASGI_APPLICATION = 'myblog.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}

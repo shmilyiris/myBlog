@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block title %} 聊天室 {% endblock title %}
 {% block content %}
 <div class="container">
@@ -14,9 +14,9 @@
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="chat-sidebox-heading panel-heading border" style="background-color:rgba(232,232,232, 0.4); height:8vh; padding:2px;">
-                            <div class="chat-sidebox-heading-img" style="position:relative; width:25%; display:inline-block; margin:5px;">
+                            <div class="chat-sidebox-heading-img" style="position:relative; width:30px; height:30px; display:inline-block; margin:5px;">
                                 <a href="{% url 'userprofile:edit' user.id%}">
-                                    <img src="{{ profile.avatar.url }}" class="rounded-circle" style="max-height:70%; max-width:70%;">
+                                    <img src="{{ profile.avatar.url }}" class="" style="width:100%; height:100%; border-radius:50%;">
                                 </a>
                             </div>
 
@@ -36,30 +36,37 @@
                 <!-- 私聊区heading-好友信息 -->
                 <div class="col-md-8">
                     <div class="panel panel-default">
-                        <div class="chat-fieldbox-heading panel-heading" style="background-color:rgba(245,245,245, 0.6); height:8vh">
+                        <div id="chat-write-header" value="" class="chat-fieldbox-heading panel-heading" style="background-color:rgba(245,245,245, 0.6); text-align:center; font-weight:bold; height:8vh; font-size:25px; padding-top: 5px;">
                         </div>
-
-                        <div class="panel-content">
-                        </div>
-
                     </div>
                 </div>
             </div>
-
+            
+            <!-- 私聊区右侧区域 -->
             <div class="row no-gutters" style="">
+                <!-- 私聊区右侧聊天记录展示框 -->
                 <div class="col-md-4">
-                    <div class="chat-sidebox-body" style="height:70vh; background-color:rgba(232,232,232, 0.7);">
+                    <div class="chat-sidebox-body" style="height:70vh; background-color:rgba(232,232,232, 0.7)">
+                        {% for u in users %}
+                            {% if u.username != user.username %}
+                            <div tabindex="{{ u.id }}" class="chat-sidebox-body-item" onclick='write_header_username("{{ user.username}}" ,"{{ u.username }}", "{{ u.id }}")'>{{ u.username }}</div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
+                <!-- 私聊区右侧输入框 -->
                 <div class="col-md-8 border">
                     <div class="row">
-                        <div class="chat-fieldbox-body-show" style="height:45vh;">
+                        <div class="col-md-12">
+                            <div id="chat-fieldbox-body-show" style="height:45vh; width:100%; overflow:auto; overflow-x:hidden; background-color:rgba(245,245,245, 1);">
+                            </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="chat-fieldbox-body-input" style="height:20vh">
+                    <div class="row no-gutters">
+                        <div class="col-md-12 border-top chat-fieldbox-body-input" style="height:18vh">
+                            <textarea id="chat-fieldbox-body-input-textarea" style="outline:none; resize:none; border:none;width:100%; height:100%;overflow:auto;" readonly></textarea>
+                            <button id="chat-fieldbox-body-input-button" class="btn btn-outline-secondary" style="float:right" onclick='send_message()'>发送</button>
                         </div>
                     </div>
                 </div>
@@ -87,9 +94,23 @@
 </div>
 
 <script>
+    let state = "", ps = "";
     $(document).ready(function() {
-        text_move_to_end();
+        text_move_to_end("pubwindow");
     });
+    $('#pubform-input').keypress(function(e) {
+        if (e.which == 13) {
+            $('#pubform-submit').click();
+        }
+    });
+
+    $('#chat-fieldbox-body-input-textarea').keypress(function(e) {
+        if (e.which == 13) {
+            $('#chat-fieldbox-body-input-button').click();
+        }
+    });
+
+
     $("#pubform-submit").click(function() {
         $.ajax({
             url: "http://101.35.183.71:10000/chat/send/pub/",
@@ -103,15 +124,61 @@
             success: function(resp) {
                 let diff = resp.content + "&#10;";
                 $('#pubwindow').append(diff);
-                text_move_to_end();
+                text_move_to_end("pubwindow");
             }
         });
+        document.getElementById('pubform-input').value = "";
     })
 
-    function text_move_to_end() {
-        var obj = $("#pubwindow");
+    function text_move_to_end(divid) {
+        var obj = $("#" + divid);
         if (obj.length)
             obj.scrollTop(obj[0].scrollHeight - obj.height());
     }
+
+    function write_header_username(me, e, tid) {
+        let id = "{{ user.id }}";
+        if (tid != state) $('#chat-fieldbox-body-show').empty();
+        state = tid;
+        $('#chat-write-header').empty();
+        $('#chat-write-header').append(e);
+        document.getElementById('chat-fieldbox-body-input-textarea').readOnly = false;
+        show_history(me, e); // show消息记录
+        $.ajax({
+            url: "http://101.35.183.71:10000/chat/getsrc/",
+            type: "GET",
+            data: {
+                id: tid,
+            },
+            success: function(resp) {
+                ps = new PrivateSocket(resp.url, parseInt(id), parseInt(state)); // 建立socket连接
+            }
+        });
+    }
+
+    function send_message() {
+        if (state == "") return false;
+        let val = $('#chat-fieldbox-body-input-textarea').val();
+        document.getElementById('chat-fieldbox-body-input-textarea').value = "";
+        var $new_message = $(`
+        <div class="chat-fieldbox-body-show-message-sender">
+            <div class="chat-fieldbox-body-show-message-img">
+                <img src="{{ profile.avatar.url }}" class="">
+            </div>
+            <div class="chat-fieldbox-body-show-message-send-item"></div>
+        </div>
+        `);
+        var tmp = $new_message.find(".chat-fieldbox-body-show-message-send-item");
+        tmp.append(val);
+        $('#chat-fieldbox-body-show').append($new_message);
+        ps.send_message(val);
+        text_move_to_end("chat-fieldbox-body-show");
+    }
+
+    function show_history(me, m) {
+        return true;
+    }
+
+
 </script>
 {% endblock content %}

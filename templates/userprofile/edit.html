@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% block title %} 用户信息 {% endblock title %}
 {% block content %}
 
@@ -17,8 +17,8 @@
             </div>
             <br><br>
          {% if profile.avatar %}
-            <div class="row">
-                <img src="{{ profile.avatar.url }}" style="max-width:40%; position:relative; left:30%" class="rounded-circle img-responsive center-block">
+            <div class="row" style="width:40%; height:40%;">
+                <img src="{{ profile.avatar.url }}" style="width:100%; height:auto; position:relative; border-radius:50%; left:80%" class="img-responsive center-block">
             </div>
             {% else %}
                 <h5 class="text-center">暂无头像</h5>
