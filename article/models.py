@@ -14,6 +14,8 @@ class ArticlePost(models.Model):
     created = models.DateTimeField(default=timezone.now)
     # 文章更新时间
     updated = models.DateTimeField(auto_now=True)
+    # 文章浏览量
+    total_views = models.PositiveIntegerField(default=0)
 
 
     # 内部类，用于给model定义元数据

@@ -6,7 +6,6 @@
     <div class="row">
         <!-- 私聊区 -->
         <div class="col-md-8">
-            <br>
             <!--私聊区heading -->
             <div class="row no-gutters border" style="border-radius:2px;">
 
@@ -49,7 +48,12 @@
                     <div class="chat-sidebox-body" style="height:70vh; background-color:rgba(232,232,232, 0.7)">
                         {% for u in users %}
                             {% if u.username != user.username %}
-                            <div tabindex="{{ u.id }}" class="chat-sidebox-body-item" onclick='write_header_username("{{ user.username}}" ,"{{ u.username }}", "{{ u.id }}")'>{{ u.username }}</div>
+                            <div class="chat-sidebox-body-item" tabindex="{{ u.id }}" onclick='write_header_username("{{ user.username}}" ,"{{ u.username }}", "{{ u.id }}", "{{ u.profile.avatar.url }}")'>
+                                <div class="chat-sidebox-body-item-img">
+                                    <img src="{{ u.profile.avatar.url }}">
+                                </div>
+                                <div class="chat-sidebox-body-item-text">{{ u.username }}</div>
+                            </div>
                             {% endif %}
                         {% endfor %}
                     </div>
@@ -76,7 +80,6 @@
         <!-- 公共聊天区 -->
         <div class="col-md-4">
             <div class="form-group">
-                <br>
                 <p class="text-center" style="font-weight:bold">公共聊天区</p>
 
                 <textarea id="pubwindow" class="form-control form-control-lg" style="position:relative; height:460px; font-size:15px; text-align:left; resize:none" readonly>{% for history in histories%}{{ history }}&#10;{% endfor %}</textarea>
@@ -136,7 +139,7 @@
             obj.scrollTop(obj[0].scrollHeight - obj.height());
     }
 
-    function write_header_username(me, e, tid) {
+    function write_header_username(me, e, tid, url) {
         let id = "{{ user.id }}";
         if (tid != state) $('#chat-fieldbox-body-show').empty();
         state = tid;
@@ -144,6 +147,8 @@
         $('#chat-write-header').append(e);
         document.getElementById('chat-fieldbox-body-input-textarea').readOnly = false;
         show_history(me, e); // show消息记录
+        ps = new PrivateSocket(url, parseInt(id), parseInt(state));
+        /*
         $.ajax({
             url: "http://101.35.183.71:10000/chat/getsrc/",
             type: "GET",
@@ -153,12 +158,13 @@
             success: function(resp) {
                 ps = new PrivateSocket(resp.url, parseInt(id), parseInt(state)); // 建立socket连接
             }
-        });
+        });*/
     }
 
     function send_message() {
         if (state == "") return false;
         let val = $('#chat-fieldbox-body-input-textarea').val();
+        if (val == "") return false;
         document.getElementById('chat-fieldbox-body-input-textarea').value = "";
         var $new_message = $(`
         <div class="chat-fieldbox-body-show-message-sender">

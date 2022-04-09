@@ -4,12 +4,10 @@
 {% block content %}
 
 <!-- 用户个人信息编辑界面 -->
-<br>
 <form method="post" action="." enctype="multipart/form-data" style="">
+    {% csrf_token %}
 <div class="container">
     <div class="row shadow-lg">
-
-        {% csrf_token %}
         <div class="col-md-6 border-right">
             <br>
             <div class="text-center" style="font-weight:bold">
@@ -59,7 +57,7 @@
                 </div>
                 <br>
                 
-                <div style="position:relative; left:40%">
+                <div style="position:relative; left:40%; width: 10%">
                     <button type="submit" class="btn btn-primary" onclick="">提交</button>
                 </div>
             <br>

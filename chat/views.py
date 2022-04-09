@@ -56,7 +56,6 @@ def getsrc(request):
     if request.method == "GET":
         id = request.GET.get("id")
         profile = Profile.objects.get(user_id=id)
-        print(profile.avatar.url)
         url = profile.avatar.url
         return JsonResponse({
             'url': url,

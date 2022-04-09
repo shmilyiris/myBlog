@@ -8,82 +8,13 @@
     <!--预留网站标题-->
     <title> {% block title %} {% endblock title %} </title>
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'md_css/default.css' %}">
     <link rel="stylesheet" href="{% static 'js/src/chat_private/zbase.js' %}">
     <link rel="icon" href="https://pic.imgdb.cn/item/623cb48e27f86abb2aa53c90.png">
-    <style>
-        .chat-sidebox-body-item:hover {
-            cursor: pointer;
-            background-color: lightgrey;
-            font-weight: bold;
-            color: white;
-        }
-        .chat-sidebox-body-item:focus {
-            cursor: pointer;
-            background-color: lightgrey;
-            font-weight: bold;
-            color: black;
-        }
-        .chat-fieldbox-body-show-message-sender {
-            width: 100%;
-            height: auto;
-            margin: 3px;
-            overflow: hidden;
-        }
-        .chat-fieldbox-body-show-message-img {
-            width: 3vh;
-            height: 3vh;
-            float: left;
-            margin-left: 2px;
-            display: inline-block;
-        }
-        .chat-fieldbox-body-show-message-img > img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
-        .chat-fieldbox-body-show-message-send-item {
-            height: auto;
-            padding: 1vh;
-            margin-left: 4px;
-            word-break: break-all;
-            max-width: 80%;
-            background-color: lightgreen;
-            border-radius: 2px;
-            font-size: 6px;
-            display: inline-block;
-        }
-        .chat-fieldbox-body-show-message-receive {
-            width: 100%;
-            height: auto;
-            margin: 3px;
-            overflow: hidden;
-        }
-        .chat-fieldbox-body-show-message-receive-img {
-            width: 3vh;
-            height: 3vh;
-            float: right;
-            margin-left: 2px;
-            display: inline-block;
-        }
-        .chat-fieldbox-body-show-message-receive-img > img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
-        .chat-fieldbox-body-show-message-receive-item {
-            height: auto;
-            padding: 1vh;
-            margin-right: 4px;
-            word-break: break-all;
-            max-width: 80%;
-            background-color: white;
-            border-radius: 2px;
-            font-size: 6px;
-            display: inline-block;
-            float: right;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.18.1/styles/monokai-sublime.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'md_css/monokai.css' %}">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+
 </head>
 
 
@@ -104,9 +35,11 @@
     <script type="text/javascript" id="MathJax-script" async
                                    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     {% include 'header.html' %}
     {% block content %} {% endblock content %}
     {% include 'footer.html' %}
+
 </body>
 </html>
