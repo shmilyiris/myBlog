@@ -8,6 +8,8 @@ class ArticlePost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # 文章标题
     title = models.CharField(max_length=100)
+    # 文章简介
+    introduction = models.CharField(max_length=100, default="这是一篇文章..")
     # 文章正文
     body = models.TextField()
     # 文章创建时间

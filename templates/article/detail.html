@@ -10,7 +10,7 @@
 <!-- <script>hljs.initHighlightingOnLoad();</script> --> 
 <div class="container">
     <div class="row">
-        <div class="col-9">
+        <div class="col-9 shadow-lg" style="border-radius:5px;">
             <h1 class="mt-4 mb-4" align="center"><strong>{{ article.title }}</strong></h1>
             <div class="alert alert-success">
                 <div>
@@ -37,6 +37,11 @@
             </div>
 
             <!--文章内容-->
+            <div class="alert alert-secondary">
+                <div id="articleintroduction">简介：{{ article.introduction }}</div>
+            </div>
+
+            <br>
             <div class="col-12">
                 <div id="articlecontent">{{ article.body|safe}}</div>
             </div>
@@ -49,7 +54,7 @@
         </div>
     </div>
 </div>
-<button id="returnTop" class="btn btn-default" style="position:fixed; right:2%; bottom:10%;">回到顶部</button>
+<button id="returnTop" class="btn btn-dark" style="position:fixed; right:2%; bottom:10%;">回到顶部</button>
 
 <script>
     function confirm_safe_delete() {

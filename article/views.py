@@ -104,6 +104,7 @@ def article_update(request, id):
         if article_post_form.is_valid():
             article.title = request.POST['title']
             article.body = request.POST['body']
+            article.introduction = request.POST['introduction']
             article.save()
             return redirect("article:article_detail", id=id)
         else:
