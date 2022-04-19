@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import ArticlePost
+from .models import ArticlePost, ArticleColumn
 from .forms import ArticlePostForm
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from comment.models import Comment
 from django.db.models import Q
 import markdown
 
@@ -32,7 +33,7 @@ def article_list(request):
         else:
             article_list = ArticlePost.objects.all()
     # 每页显示3篇文章
-    paginator = Paginator(article_list, 3)
+    paginator = Paginator(article_list, 5)
     # 获取url中的页码，并获取对应文章
     page = request.GET.get('page')
     articles = paginator.get_page(page)
@@ -59,8 +60,9 @@ def article_detail(request, id):
     )
 
     article.body = md.convert(article.body)
+    comments = Comment.objects.filter(article=id)
     # 需要传递给模板的对象
-    context = {'article':article, 'toc': md.toc}
+    context = {'article':article, 'toc': md.toc, 'comments': comments}
     return render(request, 'article/detail.html', context)
 
 # 写入文章的视图
@@ -72,13 +74,18 @@ def article_create(request):
         if article_post_form.is_valid():
             new_article = article_post_form.save(commit=False)
             new_article.author = User.objects.get(id=request.user.id) # 指定文章作者为当前登录用户
+            if request.POST['column'] != 'none':
+                new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
             new_article.save()
+            # 保存tags的多对多关系
+            article_post_form.save_m2m()
             return redirect("article:article_list")
         else:
             return HttpResponse("表单内容有误，请重新填写。")
     else:
         article_post_form = ArticlePostForm()
-        context = { 'article_post_form': article_post_form }
+        columns = ArticleColumn.objects.all()
+        context = { 'article_post_form': article_post_form, 'columns': columns}
         return render(request, 'article/create.html', context)
 
 # 安全删除文章的视图
@@ -105,15 +112,21 @@ def article_update(request, id):
             article.title = request.POST['title']
             article.body = request.POST['body']
             article.introduction = request.POST['introduction']
+            if request.POST['column'] != 'none':
+                article.column = ArticleColumn.objects.get(id=request.POST['column'])
+            else:
+                article.column = None
             article.save()
             return redirect("article:article_detail", id=id)
         else:
             return HttpResponse("表单数据有误，请重新填写。")
     else:
         article_post_form = ArticlePostForm()
+        columns = ArticleColumn.objects.all()
         context = {
             'article': article, # 为了提取更改前的内容
             'article_post_form': article_post_form,
+            'columns': columns,
         }
         return render(request, 'article/update.html', context)
 

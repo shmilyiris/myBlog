@@ -11,38 +11,39 @@
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item" style="color:grey; user-select:none;">
+            <div>
                 {% if order == 'total_views' %}
-                    <a class="article_choice article_choice_new" href="{% url 'article:article_list' %}">选择最新视图</a>
+                    <input type="radio" id="new-sort" name="sortway" value="new">
                 {% else %}
-                    当前为最新视图
+                    <input type="radio" id="new-sort" name="sortway" value="new" checked>
                 {% endif %}
-            </li>
-
-            <li class="breadcrumb-item" style="color:rgb(255, 101, 101); user-select:none;">
+                <label for="new">最新视图</label>
+            </div>
+            &nbsp;&nbsp;
+            <div>
                 {% if order != 'total_views' %}
-                    <a class="article_choice article_choice_hot" href="{% url 'article:article_list' %}?order=total_views">选择最热视图</a>
+                    <input type="radio" id="hot-sort" name="sortway" value="hot">
                 {% else %}
-                    当前为最热视图
+                    <input type="radio" id="hot-sort" name="sortway" value="hot" checked>
                 {% endif %}
-            </li>
+                <label for="hot">最热视图</label>
+            </div>
+            <div class="col-auto mr-auto" style="margin-left:20px">
+                <form class="form-inline" >
+                    <label class="sr-only">content</label>
+                    <input type="text" 
+                        class="form-control mb-2 mr-sm-2" 
+                        name="search" 
+                        placeholder="搜索文章..." 
+                        required
+                        style="height:25px;"
+                    >
+                </form>
+            </div>
+
         </ol>
     </nav>
 
-    <!-- 新增，搜索栏 -->
-    <div class="row">
-        <div class="col-auto mr-auto">
-            <form class="form-inline" >
-                <label class="sr-only">content</label>
-                <input type="text" 
-                    class="form-control mb-2 mr-sm-2" 
-                    name="search" 
-                    placeholder="搜索文章..." 
-                    required
-                >
-            </form>
-        </div>
-    </div>
 
     <!-- 新增，搜索提示语 -->
     {% if search %}
@@ -56,39 +57,90 @@
     {% endif %}
 
 
+    <!-- 列表循环 -->
     <div class="row mt-2">
-
         {% for article in articles %}
-        <!--文章内容-->
-        <div class="col-4 mb-4">
-        <!--卡片容器-->
-            <div class="card h-100">
-                <!--标题 card-header-->
-                <h4 class="card-header">{{article.title}}</h4>
+            <!-- 文章内容 -->
+            <div class="col-12 article-list-item" onclick="window.open('{% url 'article:article_detail' article.id %}')">
+                <!-- 栏目 -->
+                {% if article.column %}
+                    <button type="button" style="font-weight:bold"
+                        class="btn btn-sm mb-2
+                            {% if article.column.title == 'Project' %}
+                                btn-danger
+                            {% elif article.column.title == 'Algorithm' %}
+                                btn-success
+                            {% elif article.column.title == 'Basis' %}
+                                btn-warning
+                            {% elif article.column.title == 'Plan'%}
+                                btn-info
+                            {% elif article.column.title == 'Template' %}
+                                btn-primary
+                            {% elif article.column.title == 'Script' %}
+                                btn-dark
+                            {% endif %}
+                        "
+                    >
+                        {{ article.column }}
+                    </button>
+                {% endif %}
 
-                <!--摘要 card-body-->
-                <div class="card-body">
-                    <!-- 取出文章的前100个字符 -->
-                    <p class="card-text">{{ article.introduction }}</p>
+                <!-- 标签 -->
+                <span>
+                    {% for tag in article.tags.all %}
+                        <a href="#"
+                           class="badge badge-secondary" 
+                        >
+                            {{ tag }}
+                        </a>
+                    {% endfor %}
+                </span>
+
+                <!-- 标题 -->
+                <h4>
+                    <b>
+                        <a href="{% url 'article:article_detail' article.id %}"
+                           style="color: black;" target="_blank"
+                        >
+                            {{ article.title }}
+                        </a>
+                    </b>
+                </h4>
+                <!-- 摘要 -->
+                <div>
+                    <p style="color: gray;">
+                        {{ article.introduction }}...
+                    </p>
                 </div>
-
-                <!--注脚 card-footer-->
-                <div class="card-footer">
-                    <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
-                    <span>
-                        <small class="col align-self-end" style="color: gray">
-                            浏览：{{ article.total_views }}
-                        </small>
+                <!-- 注脚 -->
+                <p>
+                    <!-- 附加信息 -->
+                    <span style="color:blue">
+                        <i class="fas fa-eye" style="color: lightskyblue;"></i>
+                        {{ article.total_views }}&nbsp;&nbsp;&nbsp;
                     </span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
 
+                    <span>
+                        <i class="fas fa-comments" style="color: yellowgreen;"></i>
+                        {{ article.comments.count }}&nbsp;&nbsp;&nbsp;
+                    </span>
+
+                    <span>
+                        <i class="fas fa-clock" style="color:grey;"></i>
+                        {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
+                    </span>
+
+                    <span style="color: darkred;">
+                        {{ article.updated|date:'Y-m-d' }} 更新
+                    </span>
+                </p>
+            </div>
+        {% endfor %}
     </div>
 </div>
 
 <!-- 显示页码 -->
+<br>
 <div class="pagination">
     <div class="m-auto">
         <span class="step-links">
@@ -118,4 +170,14 @@
         </span>
     </div>
 </div>
+
+<script>
+$(document).ready(function() { 
+    $('input[type=radio][name=sortway]').change(function() {
+        var host = "http://" + window.location.host;
+        if (this.value == "hot") window.location.href = host + "/article/article-list/?order=total_views";
+        else window.location.href = host + "/article/article-list/";
+    });
+});
+</script>
 {% endblock content %}

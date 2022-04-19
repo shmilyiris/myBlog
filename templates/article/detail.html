@@ -20,9 +20,17 @@
                     -- <a href="{% url "article:article_update" article.id %}">编辑文章</a>
                     {% endif %}
                 </div>
-                <div>
-                    浏览：{{ article.total_views }}
-                </div>
+                <p>
+                    <span style="color:blue">
+                        <i class="fas fa-eye" style="color: lightskyblue;"></i>
+                        {{ article.total_views }} &nbsp;&nbsp;&nbsp;
+                    </span>
+
+                    <span>
+                        <i class="fas fa-comments" style="color: yellowgreen;"></i>
+                        {{ article.comments.count }}
+                    </span>
+                </p>
 
 
                 <!--新增隐藏表单-->
@@ -41,9 +49,46 @@
                 <div id="articleintroduction">简介：{{ article.introduction }}</div>
             </div>
 
-            <br>
             <div class="col-12">
-                <div id="articlecontent">{{ article.body|safe}}</div>
+                <div id="articlecontent">{{ article.body|safe }}</div>
+            </div>
+
+            <!-- 评论内容 -->
+            <hr>
+
+            {% if user.is_authenticated %}
+                <div>
+                    <form action="{% url 'comment:post_comment' article.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea type="text" class="form-control" id="body" name="body" rows="2" placeholder="评论点儿什么吧.."></textarea>
+                            <button class="btn btn-sm btn-primary" style="float:right; margin-top:5px;">发送</button>
+                        </div>
+                    </form>
+                </div>
+                <br>
+            {% else %}
+                <br>
+                <h5 class="row justify-content-center">
+                    请<a href="{% url 'userprofile:login' %}">登录</a>后回复
+                </h5>
+                <br>
+            {% endif %}
+
+            <!-- 显示评论 -->
+            <div>
+                {% for comment in comments %}
+                    <hr>
+                    <p>
+                        <strong style="color: red">
+                            {{ comment.user }} &nbsp;&nbsp;&nbsp;
+                        </strong> 
+                        <span style="color: blue">
+                            {{ comment.created|date:"Y-m-d H:i:s" }}
+                        </span> 
+                    </p>
+                    <pre class="comment-item">{{ comment.body }}</pre>
+                {% endfor %}
             </div>
         </div>
 
@@ -54,7 +99,8 @@
         </div>
     </div>
 </div>
-<button id="returnTop" class="btn btn-dark" style="position:fixed; right:2%; bottom:10%;">回到顶部</button>
+<button id="returnTop" class="btn btn-dark" style="position:fixed; right:2%; bottom:10%;">&uarr;</button>
+<button id="returnBottom" class="btn btn-dark" style="position:fixed; right:4.5%; bottom:10%;">&darr;</button>
 
 <script>
     function confirm_safe_delete() {
@@ -67,6 +113,10 @@
     $('#returnTop').click(function() {
         document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
+    $('#returnBottom').click(function() {
+        window.scrollTo(0,document.body.scrollHeight);
+    });
+
 
     // document.getElementById('articlecontent').innerHTML = marked.parse(document.getElementById('articlecontent').innerHTML);
 </script>

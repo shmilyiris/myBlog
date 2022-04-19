@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'password_reset',
     'coding',
     'chat',
+    'comment',
+    'taggit',
 ]
 
 MIDDLEWARE = [

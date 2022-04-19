@@ -26,5 +26,6 @@ urlpatterns = [
     path('coding/', include('coding.urls', namespace='coding')),
     path('password-reset/', include('password_reset.urls')),
     path('chat/', include('chat.urls', namespace='chat')),
+    path('comment/', include('comment.urls', namespace='comment')),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

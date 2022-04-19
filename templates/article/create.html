@@ -19,16 +19,43 @@
                     <input type="text" class="form-control" id="title" name="title">
                 </div>
 
+                <!-- 文章栏目 -->
+                <div class="form-group" style="width:30%; display:inline-block; margin-right:5%;">
+                    <label for="column">栏目和标签</label>
+                    <select class="form-control" 
+                            id="column" 
+                            name="column" 
+                            style="display:inline-block;"
+                    >
+                            <option value="none">请选择栏目..</option>
+                        {% for column in columns %}
+                            <option value="{{ column.id }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- 文章标签 -->
+                <div class="form-group" style="display:inline-block; width: 60%;">
+                    <label for="tags"></label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="tags" 
+                           name="tags"
+                           placeholder="请写入标签.." 
+                           style="display:inline-block"
+                    >
+                </div>
+
                 <!-- 文章简介 -->
                 <div class="form-group">
                     <label for="introduction">文章简介</label>
-                    <textarea type="text" class="form-control" id="introduction" name="introduction" style="position:relative;height:80px;"></textarea>
+                    <textarea type="text" class="form-control" id="introduction" name="introduction" style="position:relative;height:65px;font-size:85%;"></textarea>
                 </div>
 
                 <!--文章正文-->
                 <div class="form-group">
                     <label for="body">文章正文</label>
-                    <textarea type="text" class="form-control" id="body" name="body" row="12" style="position:relative;height:300px;"></textarea>
+                    <textarea type="text" class="form-control" id="body" name="body" row="12" style="position:relative;height:400px;font-size:80%;"></textarea>
                 </div>
 
                 <!--提交按钮-->
