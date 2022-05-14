@@ -10,17 +10,19 @@
             <ul class="navbar-nav">
                 <!--条目-->
                 <li class="nav-item">
-                    <a class="nav-link" href='{% url "chat:chatfield" %}'>聊天室</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'coding:edit' %}">写代码</a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link" href="{% url 'article:article_create' %}">写文章</a>
                 </li>
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true">
+                        应用
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href='{% url "chat:chatfield" %}'>聊天室</a>
+                        <a class="dropdown-item" href="{% url 'coding:edit' %}">写代码</a>
+                        <a class="dropdown-item" href="{% url 'calculator:calculator' %}">计算器</a>
+                    </div>
+                </li>
 
                 {% if user.is_authenticated %}
                     <!--如果用户已登录，显示用户名下拉框-->

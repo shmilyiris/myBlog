@@ -262,12 +262,12 @@ code:not([class]) {
 }
 
 #articlecontent > h3 {
-    border-left: 4px solid pink;
+    border-left: 4px solid yellowgreen;
     padding-left: 20px;
     margin-top: 15px;
     margin-bottom: 10px;
     font-weight: bold;
-    font-size: 23px;
+    font-size: 20px;
 }
 
 #articlecontent > h4 {
@@ -291,6 +291,16 @@ code:not([class]) {
     font-size: 15px;
 }
 
+#articlecontent blockquote {
+    border-left: 5px solid hotpink;
+    padding-left: 15px;
+    color: hotpink;
+    background-color: rgba(255,105,180, 0.1);
+    font-style: italic;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 #articlecontent a:hover {
     background-color: lightgrey;
 }
@@ -312,7 +322,6 @@ input:checked + label {
 
 .comment-item {
     font-size: 1em;
-    background-color: rgba(0,0,0,0.2);
 }
 
 .article-list-item {
@@ -326,4 +335,12 @@ input:checked + label {
     cursor: pointer;
     transform: scale(1.01);
     transition: 100ms;
+}
+
+.delete-comment-item {
+    float: right;
+}
+
+.delete-comment-item:hover {
+    cursor: pointer;
 }

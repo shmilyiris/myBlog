@@ -15,30 +15,47 @@ def article_list(request):
     # 取出所有博客文章
     search = request.GET.get('search')
     order = request.GET.get('order')
+    column = request.GET.get('column')
+    tag = request.GET.get('tag')
+
+    article_list = ArticlePost.objects.all()
+
+    # 搜索查询集
     if search:
-        if order == 'total_views':
-            article_list = ArticlePost.objects.filter(
-                Q(title__icontains=search) |
-                Q(body__icontains=search)
-            ).order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.filter(
-                Q(title__icontains=search) |
-                Q(body__icontains=search)
-            )
+        article_list = article_list.filter(
+            Q(title__icontains=search) |
+            Q(body__icontains=search)
+        )
     else:
         search = ''
-        if request.GET.get('order') == 'total_views':
-            article_list = ArticlePost.objects.all().order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.all()
-    # 每页显示3篇文章
+
+    # 栏目查询集
+    column_ids = ArticleColumn.objects.filter(title=column)
+    if column_ids:
+        article_list = article_list.filter(column=column_ids[0])
+
+    # 标签查询集
+    if tag and tag != 'None':
+        article_list = article_list.filter(tags__name__in=[tag])
+
+    # 查询集排序
+    if order == 'total_views':
+        article_list = article_list.order_by('-total_views')
+
+    # 每页显示5篇文章
     paginator = Paginator(article_list, 5)
     # 获取url中的页码，并获取对应文章
     page = request.GET.get('page')
     articles = paginator.get_page(page)
+
     # 需要传给模板的对象
-    context = { 'articles':articles, 'order': order, 'search': search }
+    context = { 
+        'articles':articles, 
+        'order': order, 
+        'search': search,
+        'column': column,
+        'tag': tag,
+    }
 
     return render(request, 'article/list.html', context)
 
@@ -112,6 +129,11 @@ def article_update(request, id):
             article.title = request.POST['title']
             article.body = request.POST['body']
             article.introduction = request.POST['introduction']
+            article.tags.clear();
+            for item in request.POST['tags'].split(','):
+                if item:
+                    article.tags.add(item)
+
             if request.POST['column'] != 'none':
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:

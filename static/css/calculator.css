@@ -1,0 +1,45 @@
+.calculator {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(4, 6rem);
+  grid-template-rows: minmax(6rem, auto) repeat(5, 4rem); /*minmax函数指定长度区间*/
+  gap: 1px;
+  width: calc(24rem + 5px); /*总宽度+margin和padding宽度之和*/
+  margin: 0 auto; /*水平居中*/
+  border: 2px solid black;
+  background-color: rgb(196,196,196， 0.7);
+}
+
+.output {
+  box-sizing: border-box;
+  grid-column: 1 / span 4;
+  display: flex;
+  /* flex 布局 */
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 10px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.last-output {
+  font-size: 0.8em;
+}
+
+.current-output {
+  font-size: 3em;
+}
+
+.button-ac {
+  grid-column: 1 / span 2; /*从第一列开始独占两格*/
+}
+
+.button-equal {
+  grid-column: 3 / span 2;
+}
+
+.calculator > button:hover {
+  background-color: #B5B5B5;
+}
+

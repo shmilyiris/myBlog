@@ -61,7 +61,7 @@
     <div class="row mt-2">
         {% for article in articles %}
             <!-- 文章内容 -->
-            <div class="col-12 article-list-item" onclick="window.open('{% url 'article:article_detail' article.id %}')">
+            <div class="col-12 article-list-item" onclick="window.location.href='{% url 'article:article_detail' article.id %}'">
                 <!-- 栏目 -->
                 {% if article.column %}
                     <button type="button" style="font-weight:bold"
@@ -79,16 +79,16 @@
                             {% elif article.column.title == 'Script' %}
                                 btn-dark
                             {% endif %}
-                        "
+                        " 
                     >
-                        {{ article.column }}
+                        <a href="{% url 'article:article_list' %}?column={{ article.column.title }}" style="color:white">{{ article.column }}</a>
                     </button>
                 {% endif %}
 
                 <!-- 标签 -->
                 <span>
                     {% for tag in article.tags.all %}
-                        <a href="#"
+                        <a href="{% url 'article:article_list' %}?tag={{ tag }}"
                            class="badge badge-secondary" 
                         >
                             {{ tag }}
@@ -145,11 +145,11 @@
     <div class="m-auto">
         <span class="step-links">
             {% if articles.has_previous %}
-            <a href="?page=1&order={{ order }}&search={{ search }}" class="btn btn-success">
+            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">
                     &laquo; 1
                 </a>
                 <span>...</span>
-                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}" class="btn btn-secondary">
+                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-secondary">
                     {{ articles.previous_page_number }}
                 </a>
             {% endif %}
@@ -159,11 +159,11 @@
             </span>
 
             {% if articles.has_next %}
-                <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}" class="btn btn-secondary">
+                <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-secondary">
                     {{ articles.next_page_number }}
                 </a>
                 <span>...</span>
-                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}" class="btn btn-success">
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">
                     {{ articles.paginator.num_pages }} &raquo;
                 </a>
             {% endif %}
@@ -175,8 +175,8 @@
 $(document).ready(function() { 
     $('input[type=radio][name=sortway]').change(function() {
         var host = "http://" + window.location.host;
-        if (this.value == "hot") window.location.href = host + "/article/article-list/?order=total_views";
-        else window.location.href = host + "/article/article-list/";
+        if (this.value == "hot") window.location.href = host + "/article/article-list/?order=total_views&search={{ search }}&column={{ column }}&tag={{ tag }}";
+        else window.location.href = host + "/article/article-list/?search={{ search }}&column={{ column }}&tag={{ tag }}";
     });
 });
 </script>
