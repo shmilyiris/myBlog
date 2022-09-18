@@ -47,7 +47,7 @@ def article_list(request):
     # 获取url中的页码，并获取对应文章
     page = request.GET.get('page')
     articles = paginator.get_page(page)
-
+    
     # 需要传给模板的对象
     context = { 
         'articles':articles, 

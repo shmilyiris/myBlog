@@ -28,5 +28,6 @@ urlpatterns = [
     path('chat/', include('chat.urls', namespace='chat')),
     path('comment/', include('comment.urls', namespace='comment')),
     path('calculator/', include('calculator.urls', namespace='calculator')),
+    path('todo/', include('todo.urls', namespace='todo')),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

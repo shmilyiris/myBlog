@@ -344,3 +344,102 @@ input:checked + label {
 .delete-comment-item:hover {
     cursor: pointer;
 }
+
+hr {
+    border-top: 3px solid brown;
+}
+
+.normal-hr {
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+.todo-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.todo-subtitle {
+    text-align: center;
+}
+
+.to-do-btn {
+    cursor: pointer;
+}
+
+.to-do-btn:hover {
+    transform: scale(1.1);
+    transition: 100ms;
+}
+
+.task-content-item-finished {
+    border: 1px solid green;
+    background-color: rgba(0, 255, 0, 0.2);
+    border-radius: 3px;
+}
+
+.task-content-item code {
+    color: rgb(38, 0, 255);
+    font-weight: bold;
+}
+
+.task-content-item-unfinished {
+    border: 1px solid gray;
+    background-color: rgba(130, 128, 128, 0.6);
+    border-radius: 3px;
+}
+
+.task-content-item-unfinished:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+    transition: 20ms;
+}
+
+.todo-item-delete {
+    font-size: 20px;
+}
+
+.todo-item-finish {
+    font-size: 20px;
+}
+
+.todo-item-delete:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    color: red;
+    font-weight: bold;
+    transition: 100ms;
+}
+
+.todo-item-finish:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    color: rgb(70, 233, 70);
+    font-weight: bold;
+    transition: 100ms;
+}
+
+#time-content-output {
+    font-size: 15px;
+    background-color:rgba(130, 128, 128, 0.2);
+    width: 100%;
+    border-radius: 5px;
+}
+
+#time-content-textarea {
+    height: 300px;
+}
+
+.todo-module {
+    margin: 10px;
+}
+
+.time-btn {
+    width: 100%;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.task-content-field-item {
+    margin: 5px;
+}

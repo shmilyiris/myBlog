@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} ToDo List Today {% endblock title %}
+{% block content %}
+<div class="container" style="user-select: none;">
+    <div class="row"> 
+        <div class="col-md-10 todo-title border" id="todo-date"></div>
+        <div class="col-md-2">
+            <button id="todo-clear-all" class="to-do-btn btn-danger btn-sm mb-2" style="width:100%">Clear All</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <!-- tasks module -->
+        <div class="col-md-6 todo-module">
+            <div class="row">
+                <div class="col-md-12 todo-subtitle">
+                    <h3 class="mt-4 mb-4">Tasks</h3>
+                </div>
+            </div>
+
+            <form method="POST" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row task-input border">
+                    <div class="col-md-2 d-flex flex-row align-items-center">
+                        <label for="tomato">🍅</label>
+                        <select id="tomato" name="tomato" class="form-select-sm col-md-12" aria-label="Default select example" aria-placeholder="select tomatoes">
+                            <option selected value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label for="task-content" style="display:none"></label>
+                        <textarea id="task-content" name="content" type="text" class="form-control form-control-sm"
+                        placeholder="input task.."></textarea>
+                        <a href="#!" data-mdb-toggle="tooltip" title="Set due date"></a>    
+                    </div>
+
+                    <div class="col-md-2 d-flex flex-row align-items-center">
+                        <button id="task-submit" type="submit" class="to-do-btn btn btn-success">submit</button>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="task-content-field" id="task-content-field">
+                {% for task in tasks %}
+                <div id="task_{{ task.id }}" class="task-content-field-item">
+                    <div>{{ task.tomato }}</div>
+                    {% if task.finished %}
+                        <div class="row">
+                            <div class="col-md-11 task-content-item task-content-item-finished">
+                                {{ task.content_md|safe }}
+                            </div>
+                            <div class="col-md-1 todo-item-delete d-flex flex-row align-items-center" onclick="delete_task('{{ task.id }}')">×</div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div onclick="edit_task(this, '{{ task.id }}')" class="col-md-10 task-content-item task-content-item-unfinished">
+                                {{ task.content_md|safe }}
+                            </div>
+                            <textarea class="col-md-10" name="content" 
+                            id="task_content_edit_{{ task.id }}" cols="30" rows="5" style="display:none">{{ task.content }}</textarea>
+                            <div class="col-md-1 todo-item-finish d-flex flex-row align-items-center" onclick="handle_task('{{ task.id }}')">√</div>
+                            <div class="col-md-1 todo-item-delete d-flex flex-row align-items-center" onclick="delete_task('{{ task.id }}')">×</div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- timeline module -->
+
+        <div class="col-md-5 todo-module">
+            <div class="row">
+                <div class="col-md-12 todo-subtitle">
+                    <h3 class="mt-4 mb-4">TimeLine</h3>
+                </div>
+
+                <textarea id="time-content-textarea" name="content" type="text" class="col-md-12 form-control form-control-sm"
+                placeholder="input timeline.." style="display:none">{{ timeline }}</textarea>
+
+                <div id="time-content-output" class="col-md-12">
+                    {{ timeline_md|safe }}
+                </div>
+                
+                <button id="time-content-edit" class="time-btn btn btn-warning">Edit</button>
+                <button id="time-content-save" class="time-btn btn btn-success" style="display:none">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = () => {
+        var d = new Date();
+        var curTime = d.toLocaleString();
+        var weekDay = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+        var day = weekDay[d.getDay()];
+        document.getElementById('todo-date').innerHTML = curTime + "   " + day;
+        var op_ = document.getElementById("time-content-output");
+        op_.style.display = 'block';
+    };
+
+
+    // 禁用确认提示表单
+    $(function () {
+        //禁用“确认重新提交表单”
+        window.history.replaceState(null, null, window.location.href);
+    })
+
+
+    document.getElementById('task-content').addEventListener('keydown', function(e) {
+      if (e.key == 'Tab') {
+        e.preventDefault();
+        var start = this.selectionStart;
+        var end = this.selectionEnd;
+        this.value = this.value.substring(0, start) +
+          "\t" + this.value.substring(end);
+        this.selectionStart =
+          this.selectionEnd = start + 1;
+      }
+    });
+
+    $("#task-submit").click(function() {
+        $.ajax({
+            url: "http://101.35.183.71:10000/todo/add/task/",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            data: {
+                'content': $('#task-content').val(),
+                'tomato': $('#tomato').val(),
+            },
+            success: function(resp) {
+            }
+        });
+    })
+
+    $("#todo-clear-all").click(function() {
+        let sure = confirm("Are you Sure to Clear All?");
+        if (sure)
+            $.ajax({
+                url: "http://101.35.183.71:10000/todo/remove/all/",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}",
+                },
+                data: {
+                },
+                success: function(resp) {
+                    location.reload();
+                }
+            });
+    });
+
+    function delete_task(id) {
+        $.ajax({
+            url: "http://101.35.183.71:10000/todo/remove/task/" + id + "/",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            data: {
+                id: id,
+            },
+            success: function(resp) {
+                let tid = '#task_' + id;
+                $(tid).remove();
+            }
+        });
+    };
+
+    function handle_task(id) {
+        let ta = document.getElementById("task_content_edit_" + id);
+        if (ta.style.display == 'none') {
+            // output visible, finish task
+            let finished = confirm("Are you Sure your're done?");
+            if (finished)
+                $.ajax({
+                    url: "http://101.35.183.71:10000/todo/finish/task/" + id + "/",
+                    type: "POST",
+                    headers: {
+                        'X-CSRFToken': "{{ csrf_token }}",
+                    },
+                    data: {
+                        id: id,
+                    },
+                    success: function(resp) {
+                        location.reload();
+                    }
+                });
+        } else {
+            // textarea visible, save task
+            $.ajax({
+                url: "http://101.35.183.71:10000/todo/edit/task/" + id + "/",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}",
+                },
+                data: {
+                    content: $('#task_content_edit_' + id).val(),
+                },
+                success: function(resp) {
+                    location.reload();
+                }
+            });
+        }
+    }
+
+    function finish_task(id) {
+        let finished = confirm("Are you Sure your're done?");
+        if (finished)
+            $.ajax({
+                url: "http://101.35.183.71:10000/todo/finish/task/" + id + "/",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': "{{ csrf_token }}",
+                },
+                data: {
+                    id: id,
+                },
+                success: function(resp) {
+                    location.reload();
+                }
+            });
+    };
+
+    function edit_task(e, id) {
+        e.style.display = 'none';
+        let ta = document.getElementById("task_content_edit_" + id);
+        ta.style.display = 'block';
+    }
+
+    function save_task(id) {
+        $.ajax({
+            url: "http://101.35.183.71:10000/todo/edit/task/" + id + "/",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            data: {
+                content: $('#task_content_edit_' + id).val(),
+            },
+            success: function(resp) {
+                location.reload();
+            }
+        });
+    }
+
+    var ta_ = document.getElementById("time-content-textarea");
+    var op_ = document.getElementById("time-content-output");
+    var edit = document.getElementById("time-content-edit");
+    var save = document.getElementById("time-content-save");
+
+    edit.addEventListener("click", function() {
+        console.log("click");
+        ta_.style.display = 'block';
+        op_.style.display = 'none';
+        edit.style.display = 'none';
+        save.style.display = 'block';
+    })
+
+    save.addEventListener("click", function() {
+        $.ajax({
+            url: "http://101.35.183.71:10000/todo/edit/time/",
+            type: "POST",
+            headers: {
+                'X-CSRFToken': "{{ csrf_token }}",
+            },
+            data: {
+                'content': $('#time-content-textarea').val(),
+            },
+            success: function(resp) {
+                location.reload();
+            }
+        });
+    })
+</script>
+{% endblock content%}

@@ -55,7 +55,7 @@
             </div>
 
             <!-- 评论内容 -->
-            <hr>
+            <hr class="normal-hr">
 
             {% if user.is_authenticated %}
                 <div>
@@ -79,7 +79,7 @@
             <!-- 显示评论 -->
             <div>
                 {% for comment in comments %}
-                    <hr>
+                    <hr class="normal-hr">
                     <p>
                         <strong style="color: red">
                             {{ comment.user }} &nbsp;&nbsp;&nbsp;
@@ -115,7 +115,7 @@
         <div class="col-3 mt-4 sidebar" id="sidebar">
             <div class="sidebar__inner">
                 <h4><strong>目录</strong></h4>
-                <hr>
+                <hr class="normal-hr">
                 <div>{{ toc|safe }}</div>
             </div>
         </div>

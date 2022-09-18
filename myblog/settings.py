@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'comment',
     'calculator',
     'taggit',
+    'todo'
 ]
 
 MIDDLEWARE = [
