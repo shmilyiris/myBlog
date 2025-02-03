@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} 🏠CODING is life {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-6">
+            <input id="search-engine" placeholder=" Google Search..">
+        </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+        <div class="col-md-6">
+            <p class="home-article-title">🔥hot articles <a href="{% url 'article:article_create' %}" style="font-size:0.9rem; text-align:right; color: red">⟶write</a> </p>
+        </div>
+        <div class="col-md-6">
+            <p class="home-article-title">🔧tool box</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 hot-articles">
+            {% for article in articles %}
+            <div class="col-md-12 article-list-item" onclick="window.location.href='{% url 'article:article_detail' article.id %}'">
+                <h4>
+                    <b>
+                        <a href="{% url 'article:article_detail' article.id %}"
+                           style="color: black;" target="_blank"
+                        >
+                            {{ article.title }}
+                        </a>
+                    </b>
+                </h4>
+
+                <div>
+                    <p style="color: gray;">
+                        {{ article.introduction }}...
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="home-article-link">
+                <a href="{% url 'article:article_list' %}">...more</a>
+            </div>
+        </div>
+
+        <div class="col-md-5 tool-box">
+                {% for tool in tools %}
+                <div class="tool-box-item">
+                    <a href="{{ tool.url }}">
+                        <img class="tool-box-item-icon" src="{{ tool.icon }}"> <br />
+                        {{ tool.name }}
+                    </a>
+                </div>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('search-engine').addEventListener('keydown', function(e) {
+        if (e.key == 'Enter') {
+            window.location.href = "https://www.google.com/search?q=" + this.value;
+        }
+    })
+</script>
+
+{% endblock content %}

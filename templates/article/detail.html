@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    文章详情
+    article content
 {% endblock title %}
 
 
@@ -15,10 +15,10 @@
             <h1 class="mt-4 mb-4" align="center"><strong>{{ article.title }}</strong></h1>
             <div class="alert alert-success">
                 <div>
-                    作者：{{ article.author }}
+                    author：{{ article.author }}
                     {% if user == article.author %}
-                    -- <a href="#" onclick="confirm_safe_delete()">删除文章</a>
-                    -- <a href="{% url "article:article_update" article.id %}">编辑文章</a>
+                    -<a href="#" onclick="confirm_safe_delete()" title="delete my article">🗑️</a>
+                    -<a href="{% url "article:article_update" article.id %}" title="edit my article">✍️</a>
                     {% endif %}
                 </div>
                 <div>
@@ -47,7 +47,7 @@
 
             <!--文章内容-->
             <div class="alert alert-secondary">
-                <div id="articleintroduction">简介：{{ article.introduction }}</div>
+                <div id="articleintroduction">intro：{{ article.introduction }}</div>
             </div>
 
             <div class="col-12">
@@ -55,15 +55,15 @@
             </div>
 
             <!-- 评论内容 -->
-            <hr class="normal-hr">
+            <hr>
 
             {% if user.is_authenticated %}
                 <div>
                     <form action="{% url 'comment:post_comment' article.id %}" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
-                            <textarea type="text" class="form-control" id="body" name="body" rows="2" placeholder="评论点儿什么吧.."></textarea>
-                            <button class="btn btn-sm btn-primary" style="float:right; margin-top:5px;">发送</button>
+                            <textarea type="text" class="form-control" id="body" name="body" rows="2" placeholder="comment sth.."></textarea>
+                            <button class="btn btn-sm btn-primary" style="float:right; margin-top:5px;">submit</button>
                         </div>
                     </form>
                 </div>
@@ -71,7 +71,7 @@
             {% else %}
                 <br>
                 <h5 class="row justify-content-center">
-                    请<a href="{% url 'userprofile:login' %}">登录</a>后回复
+                    please <a href="{% url 'userprofile:login' %}">login</a> to reply ..
                 </h5>
                 <br>
             {% endif %}
@@ -79,7 +79,7 @@
             <!-- 显示评论 -->
             <div>
                 {% for comment in comments %}
-                    <hr class="normal-hr">
+                    <hr class="lg-hr">
                     <p>
                         <strong style="color: red">
                             {{ comment.user }} &nbsp;&nbsp;&nbsp;
@@ -106,7 +106,7 @@
                           action="{% url 'comment:delete_comment' comment.id article.id %}" 
                           method="POST">
                         {% csrf_token %}
-                        <button type="submit">发送</button>
+                        <button type="submit">submit</button>
                     </form>
                 {% endfor %}
             </div>
@@ -114,9 +114,7 @@
 
         <div class="col-3 mt-4 sidebar" id="sidebar">
             <div class="sidebar__inner">
-                <h4><strong>目录</strong></h4>
-                <hr class="normal-hr">
-                <div>{{ toc|safe }}</div>
+                <div class="sticky-top" style="font-size:12px;">{{ toc|safe }}</div>
             </div>
         </div>
     </div>
@@ -131,6 +129,7 @@
             $('form#safe_delete button').click();
         }
     }
+    // document.getElementById('#articlecontent').innerHTML = marked.parse(document.getElementById('#articlecontent').innerHTML);
 
     $('#returnTop').click(function() {
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -160,7 +159,7 @@
 <script src="{% static 'sticky_sidebar/jquery.sticky-sidebar.min.js' %}"></script>
 <script type="text/javascript">
     $('#sidebar').stickySidebar({
-        topSpacing: 20,
+        topSpacing: 60,
         bottomSpacing: 20,
     });
 </script>

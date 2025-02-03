@@ -17,6 +17,7 @@ def show(request):
     if (str(request.user.username) != 'johnson'):
         return render(request, '404.html')
     task_list = Task.objects.all()
+    task_list = task_list.order_by('finished')
     for task in task_list:
         task.content_md = md.convert(task.content)
 
@@ -25,6 +26,7 @@ def show(request):
     else:
         timeline = TimeLine(content="TimeLine is Empty..")
         timeline.save()
+
 
     context = {
         'tasks': task_list,

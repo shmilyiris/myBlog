@@ -3,7 +3,7 @@
 
 <!-- 写入base.html中定义的title-->
 {% block title %}
-    我的博客
+    article list
 {% endblock title %}
 
 {% block content %}
@@ -12,21 +12,23 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <div>
-                {% if order == 'total_views' %}
-                    <input type="radio" id="new-sort" name="sortway" value="new">
+                {% if order != 'total_views' %}
+                    <input type="radio" id="hot-sort" name="sortway" value="hot">
+                    <label for="hot">hot</label>
                 {% else %}
-                    <input type="radio" id="new-sort" name="sortway" value="new" checked>
+                    <input type="radio" id="hot-sort" name="sortway" value="hot" checked>
+                    <label for="hot">hot🔥</label>
                 {% endif %}
-                <label for="new">最新视图</label>
             </div>
             &nbsp;&nbsp;
             <div>
-                {% if order != 'total_views' %}
-                    <input type="radio" id="hot-sort" name="sortway" value="hot">
+                {% if order == 'total_views' %}
+                    <input type="radio" id="new-sort" name="sortway" value="new">
+                    <label for="new">new</label>
                 {% else %}
-                    <input type="radio" id="hot-sort" name="sortway" value="hot" checked>
+                    <input type="radio" id="new-sort" name="sortway" value="new" checked>
+                    <label for="new">new🆕</label>
                 {% endif %}
-                <label for="hot">最热视图</label>
             </div>
             <div class="col-auto mr-auto" style="margin-left:20px">
                 <form class="form-inline" >
@@ -34,7 +36,7 @@
                     <input type="text" 
                         class="form-control mb-2 mr-sm-2" 
                         name="search" 
-                        placeholder="搜索文章..." 
+                        placeholder="Search Article..." 
                         required
                         style="height:25px;"
                     >
@@ -48,10 +50,10 @@
     <!-- 新增，搜索提示语 -->
     {% if search %}
         {% if articles %}
-            <h5><span style="color: green">"{{ search }}"</span>的搜索结果如下：</h4>
+            <h5>results for <span style="color: green">"{{ search }}"</span> as follows:</h4>
             <hr>        
         {% else %}
-            <h5>暂无<span style="color: red">"{{ search }}"</span>有关的文章。</h4>
+            <h5>no result for <span style="color: red">"{{ search }}"</span>!!</h4>
             <hr>
         {% endif %}
     {% endif %}
@@ -127,11 +129,11 @@
 
                     <span>
                         <i class="fas fa-clock" style="color:grey;"></i>
-                        {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
+                        published in <strong>{{ article.created|date:'Y-m-d' }}</strong> &nbsp;&nbsp;&nbsp;
                     </span>
 
                     <span style="color: darkred;">
-                        {{ article.updated|date:'Y-m-d' }} 更新
+                        updated in <strong>{{ article.updated|date:'Y-m-d' }}</strong>
                     </span>
                 </p>
             </div>

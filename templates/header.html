@@ -1,27 +1,25 @@
 <!--定义导航栏-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 
     <div class="container">
         <!--导航栏商标-->
-        <a class="navbar-brand" href="{% url 'article:article_list' %}">今天你coding了吗?</a>
+        <a class="navbar-brand" href="{% url 'home_show' %}" style="font-family:'sansserif'">
+            <strong>🏠CODING is life</strong>
+        </a>
 
         <!--导航栏入口-->
         <div>
             <ul class="navbar-nav">
                 <!--条目-->
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'article:article_create' %}">写文章</a>
-                </li>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true">
-                        应用
+                        app
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href='{% url "chat:chatfield" %}'>聊天室</a>
-                        <a class="dropdown-item" href="{% url 'coding:edit' %}">写代码</a>
-                        <a class="dropdown-item" href="{% url 'calculator:calculator' %}">计算器</a>
-                        <a class="dropdown-item" href="{% url 'todo:show' %}">计划通</a>
+                        <a class="dropdown-item" href='{% url "chat:chatfield" %}'>chat</a>
+                        <a class="dropdown-item" href="{% url 'coding:edit' %}">coding</a>
+                        <a class="dropdown-item" href="{% url 'calculator:calculator' %}">calculator</a>
+                        <a class="dropdown-item" href="{% url 'todo:show' %}">ToDo</a>
                     </div>
                 </li>
 
@@ -32,9 +30,9 @@
                             {{ user.username }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href='{% url "userprofile:edit" user.id%}'>个人信息</a>
-                            <a class="dropdown-item" href='#' onclick="user_delete()">删除用户</a>
-                            <a class="dropdown-item" href='{% url "userprofile:logout" %}'>退出登录</a>
+                            <a class="dropdown-item" href='{% url "userprofile:edit" user.id%}'>profile</a>
+                            <a class="dropdown-item" href='#' onclick="user_delete()">delete user</a>
+                            <a class="dropdown-item" href='{% url "userprofile:logout" %}'>logout</a>
                         </div>
                     </li>
 
@@ -55,13 +53,12 @@
                 <!--若用户未登录，则显示登录入口-->
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href='{% url "userprofile:login" %}'>登录</a>
+                        <a class="nav-link" href='{% url "userprofile:login" %}'>login</a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </div>
-
 </nav>
 
 <div>

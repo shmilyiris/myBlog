@@ -17,7 +17,7 @@
         <div class="col-md-6 todo-module">
             <div class="row">
                 <div class="col-md-12 todo-subtitle">
-                    <h3 class="mt-4 mb-4">Tasks</h3>
+                    <h4 class="mt-4 mb-4">Tasks🎯</h4>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
         <div class="col-md-5 todo-module">
             <div class="row">
                 <div class="col-md-12 todo-subtitle">
-                    <h3 class="mt-4 mb-4">TimeLine</h3>
+                    <h4 class="mt-4 mb-4">TimeLine⌚</h4>
                 </div>
 
                 <textarea id="time-content-textarea" name="content" type="text" class="col-md-12 form-control form-control-sm"
@@ -100,12 +100,23 @@
 </div>
 
 <script>
+    // function update_time() {
+    //     var d = new Date();
+    //     var curTime = d.toLocaleString();
+    //     var weekDay = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    //     var day = weekDay[d.getDay()];
+    //     document.getElementById('todo-date').innerHTML = curTime + "   " + day;
+    // }
+    
     window.onload = () => {
+        // setInterval(update_time, 1000);
         var d = new Date();
-        var curTime = d.toLocaleString();
+        var year = d.getFullYear();
+        var month = d.getMonth() + 1;
+        var day = d.getDate();
         var weekDay = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-        var day = weekDay[d.getDay()];
-        document.getElementById('todo-date').innerHTML = curTime + "   " + day;
+        var w = weekDay[d.getDay()];
+        document.getElementById('todo-date').innerHTML = year + '/' + month + '/' + day + " " + w;
         var op_ = document.getElementById("time-content-output");
         op_.style.display = 'block';
     };
@@ -117,6 +128,18 @@
         window.history.replaceState(null, null, window.location.href);
     })
 
+
+    document.getElementById('time-content-textarea').addEventListener('keydown', function(e) {
+      if (e.key == 'Tab') {
+        e.preventDefault();
+        var start = this.selectionStart;
+        var end = this.selectionEnd;
+        this.value = this.value.substring(0, start) +
+          "\t" + this.value.substring(end);
+        this.selectionStart =
+          this.selectionEnd = start + 1;
+      }
+    });
 
     document.getElementById('task-content').addEventListener('keydown', function(e) {
       if (e.key == 'Tab') {
@@ -142,6 +165,7 @@
                 'tomato': $('#tomato').val(),
             },
             success: function(resp) {
+                location.reload();
             }
         });
     })

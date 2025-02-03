@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from comment.models import Comment
 from django.db.models import Q
 import markdown
+import pymdownx
 
 # Create your views here.
 
@@ -72,11 +73,14 @@ def article_detail(request, id):
             extensions=[
                 'markdown.extensions.extra',
                 'markdown.extensions.codehilite',
+                'markdown.extensions.sane_lists',
                 'markdown.extensions.toc', # 目录扩展
+                'pymdownx.tilde',
             ]
     )
 
     article.body = md.convert(article.body)
+    # article.body = markdown2.Markdown(article.body)
     comments = Comment.objects.filter(article=id)
     # 需要传递给模板的对象
     context = {'article':article, 'toc': md.toc, 'comments': comments}
